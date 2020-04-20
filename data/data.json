@@ -1,0 +1,380 @@
+{
+    "version": "3.6.3",
+    "objects": [
+        {
+            "type": "polyline",
+            "version": "3.6.3",
+            "originX": "left",
+            "originY": "top",
+            "left": 21.5,
+            "top": 116,
+            "width": 142,
+            "height": 106,
+            "fill": "#0000ff",
+            "stroke": "#333",
+            "strokeWidth": 1,
+            "strokeDashArray": null,
+            "strokeLineCap": "butt",
+            "strokeDashOffset": 0,
+            "strokeLineJoin": "miter",
+            "strokeMiterLimit": 4,
+            "scaleX": 1,
+            "scaleY": 1,
+            "angle": 0,
+            "flipX": false,
+            "flipY": false,
+            "opacity": 0.65,
+            "shadow": null,
+            "visible": true,
+            "clipTo": null,
+            "backgroundColor": "",
+            "fillRule": "nonzero",
+            "paintFirst": "fill",
+            "globalCompositeOperation": "source-over",
+            "transformMatrix": null,
+            "skewX": 0,
+            "skewY": 0,
+            "points": [
+                {
+                    "x": 47.5,
+                    "y": 134
+                },
+                {
+                    "x": 21.5,
+                    "y": 215
+                },
+                {
+                    "x": 163.5,
+                    "y": 222
+                },
+                {
+                    "x": 144.5,
+                    "y": 116
+                },
+                {
+                    "x": 55.5,
+                    "y": 118
+                },
+                {
+                    "x": 55.5,
+                    "y": 118
+                },
+                {
+                    "x": 47.5,
+                    "y": 134
+                }
+            ]
+        },
+        {
+            "type": "polyline",
+            "version": "3.6.3",
+            "originX": "left",
+            "originY": "top",
+            "left": 234.5,
+            "top": 140,
+            "width": 150,
+            "height": 118,
+            "fill": "rgba(0,0,0,0.01)",
+            "stroke": "#333",
+            "strokeWidth": 1,
+            "strokeDashArray": null,
+            "strokeLineCap": "butt",
+            "strokeDashOffset": 0,
+            "strokeLineJoin": "miter",
+            "strokeMiterLimit": 4,
+            "scaleX": 1,
+            "scaleY": 1,
+            "angle": 0,
+            "flipX": false,
+            "flipY": false,
+            "opacity": 1,
+            "shadow": null,
+            "visible": true,
+            "clipTo": null,
+            "backgroundColor": "",
+            "fillRule": "nonzero",
+            "paintFirst": "fill",
+            "globalCompositeOperation": "source-over",
+            "transformMatrix": null,
+            "skewX": 0,
+            "skewY": 0,
+            "points": [
+                {
+                    "x": 264.5,
+                    "y": 140
+                },
+                {
+                    "x": 234.5,
+                    "y": 223
+                },
+                {
+                    "x": 328.5,
+                    "y": 258
+                },
+                {
+                    "x": 384.5,
+                    "y": 165
+                },
+                {
+                    "x": 384.5,
+                    "y": 165
+                },
+                {
+                    "x": 264.5,
+                    "y": 140
+                }
+            ]
+        },
+        {
+            "type": "polyline",
+            "version": "3.6.3",
+            "originX": "left",
+            "originY": "top",
+            "left": 318.5,
+            "top": 52,
+            "width": 166,
+            "height": 97,
+            "fill": "#ff0000",
+            "stroke": "#333",
+            "strokeWidth": 1,
+            "strokeDashArray": null,
+            "strokeLineCap": "butt",
+            "strokeDashOffset": 0,
+            "strokeLineJoin": "miter",
+            "strokeMiterLimit": 4,
+            "scaleX": 1,
+            "scaleY": 1,
+            "angle": 0,
+            "flipX": false,
+            "flipY": false,
+            "opacity": 0.65,
+            "shadow": null,
+            "visible": true,
+            "clipTo": null,
+            "backgroundColor": "",
+            "fillRule": "nonzero",
+            "paintFirst": "fill",
+            "globalCompositeOperation": "source-over",
+            "transformMatrix": null,
+            "skewX": 0,
+            "skewY": 0,
+            "points": [
+                {
+                    "x": 318.5,
+                    "y": 72
+                },
+                {
+                    "x": 425.5,
+                    "y": 52
+                },
+                {
+                    "x": 484.5,
+                    "y": 149
+                },
+                {
+                    "x": 325.5,
+                    "y": 110
+                },
+                {
+                    "x": 325.5,
+                    "y": 110
+                },
+                {
+                    "x": 318.5,
+                    "y": 72
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "version": "3.6.3",
+            "originX": "left",
+            "originY": "top",
+            "left": 70.5,
+            "top": 303,
+            "width": 315,
+            "height": 70,
+            "fill": "rgb(0,0,0)",
+            "stroke": null,
+            "strokeWidth": 0,
+            "strokeDashArray": null,
+            "strokeLineCap": "butt",
+            "strokeDashOffset": 0,
+            "strokeLineJoin": "miter",
+            "strokeMiterLimit": 4,
+            "scaleX": 1,
+            "scaleY": 1,
+            "angle": 0,
+            "flipX": false,
+            "flipY": false,
+            "opacity": 1,
+            "shadow": null,
+            "visible": true,
+            "clipTo": null,
+            "backgroundColor": "",
+            "fillRule": "nonzero",
+            "paintFirst": "fill",
+            "globalCompositeOperation": "source-over",
+            "transformMatrix": null,
+            "skewX": 0,
+            "skewY": 0,
+            "objects": [
+                {
+                    "type": "polyline",
+                    "version": "3.6.3",
+                    "originX": "left",
+                    "originY": "top",
+                    "left": -157.5,
+                    "top": -27,
+                    "width": 138,
+                    "height": 61,
+                    "fill": "#00ff00",
+                    "stroke": "#333",
+                    "strokeWidth": 1,
+                    "strokeDashArray": null,
+                    "strokeLineCap": "butt",
+                    "strokeDashOffset": 0,
+                    "strokeLineJoin": "miter",
+                    "strokeMiterLimit": 4,
+                    "scaleX": 1,
+                    "scaleY": 1,
+                    "angle": 0,
+                    "flipX": false,
+                    "flipY": false,
+                    "opacity": 0.65,
+                    "shadow": null,
+                    "visible": true,
+                    "clipTo": null,
+                    "backgroundColor": "",
+                    "fillRule": "nonzero",
+                    "paintFirst": "fill",
+                    "globalCompositeOperation": "source-over",
+                    "transformMatrix": null,
+                    "skewX": 0,
+                    "skewY": 0,
+                    "points": [
+                        {
+                            "x": 208.5,
+                            "y": 339
+                        },
+                        {
+                            "x": 84.5,
+                            "y": 311
+                        },
+                        {
+                            "x": 70.5,
+                            "y": 356
+                        },
+                        {
+                            "x": 155.5,
+                            "y": 372
+                        },
+                        {
+                            "x": 155.5,
+                            "y": 372
+                        },
+                        {
+                            "x": 208.5,
+                            "y": 339
+                        }
+                    ]
+                },
+                {
+                    "type": "polyline",
+                    "version": "3.6.3",
+                    "originX": "left",
+                    "originY": "top",
+                    "left": 34.5,
+                    "top": -35,
+                    "width": 122,
+                    "height": 26,
+                    "fill": "#00ff00",
+                    "stroke": "#333",
+                    "strokeWidth": 1,
+                    "strokeDashArray": null,
+                    "strokeLineCap": "butt",
+                    "strokeDashOffset": 0,
+                    "strokeLineJoin": "miter",
+                    "strokeMiterLimit": 4,
+                    "scaleX": 1,
+                    "scaleY": 1,
+                    "angle": 0,
+                    "flipX": false,
+                    "flipY": false,
+                    "opacity": 0.65,
+                    "shadow": null,
+                    "visible": true,
+                    "clipTo": null,
+                    "backgroundColor": "",
+                    "fillRule": "nonzero",
+                    "paintFirst": "fill",
+                    "globalCompositeOperation": "source-over",
+                    "transformMatrix": null,
+                    "skewX": 0,
+                    "skewY": 0,
+                    "points": [
+                        {
+                            "x": 262.5,
+                            "y": 329
+                        },
+                        {
+                            "x": 296.5,
+                            "y": 303
+                        },
+                        {
+                            "x": 384.5,
+                            "y": 310
+                        },
+                        {
+                            "x": 384.5,
+                            "y": 310
+                        },
+                        {
+                            "x": 262.5,
+                            "y": 329
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "backgroundImage": {
+        "type": "image",
+        "version": "3.6.3",
+        "originX": "left",
+        "originY": "top",
+        "left": 0,
+        "top": 0,
+        "width": 700,
+        "height": 857,
+        "fill": "rgb(0,0,0)",
+        "stroke": null,
+        "strokeWidth": 0,
+        "strokeDashArray": null,
+        "strokeLineCap": "butt",
+        "strokeDashOffset": 0,
+        "strokeLineJoin": "miter",
+        "strokeMiterLimit": 4,
+        "scaleX": 0.77,
+        "scaleY": 0.77,
+        "angle": 0,
+        "flipX": false,
+        "flipY": false,
+        "opacity": 1,
+        "shadow": null,
+        "visible": true,
+        "clipTo": null,
+        "backgroundColor": "",
+        "fillRule": "nonzero",
+        "paintFirst": "fill",
+        "globalCompositeOperation": "source-over",
+        "transformMatrix": null,
+        "skewX": 0,
+        "skewY": 0,
+        "crossOrigin": "",
+        "cropX": 0,
+        "cropY": 0,
+        "src": "http://localhost/konva/img/imgbg.jpg",
+        "filters": []
+    }
+}

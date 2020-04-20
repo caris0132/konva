@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="assets/fabric.min.js"></script>
     <title>fabric</title>
     <style>
@@ -21,23 +22,59 @@
 
 
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="btn btn-info btn-block">Chức năng</div>
-                <select name="sel_mode" id="sel_mode" class="form-control">
-                    <option value="" readonly>No mode</option>
-                    <option value="modeDraw">Vẽ ô vuông</option>
-                    <option value="fillColor">Tô màu</option>
-                </select>
-                <select class="form-control" id="sel_color">
-                    <option value="" readonly>Chọn màu</option>
-                </select>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link js-select-mode active" data-mode="" data-toggle="tab" href="#info">No mode</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-select-mode" data-mode="drawPolygon" data-toggle="tab" href="#drawPolygon">Vẽ đa giác</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-select-mode" data-mode="modeDraw" data-toggle="tab" href="#modeDraw">Vẽ ô vuông</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-select-mode" data-mode="fillColor" data-toggle="tab" href="#fillColor">Tô màu</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane container active" id="info">
+                        <p>Thông tin</p>
+                        <div class="row">
+                            <button class="btn btn-warning js-export-data">Export json</button>
+                            <button class="btn btn-warning js-import-data">Import json</button>
+                            <div class="col-12 mt-2">
+                                <div class="json-export-contain"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane container fade" id="drawPolygon">
+                        <div class="row">
+                            <p class="bg-warning mt-1 w-100">dblick để bắt đầu và kết thúc vẽ</p>
+                        </div>
+                        <div class="row">
+                            <div class="btn btn-success js-group">Group</div>
+                            <div class="btn btn-info js-ungroup">UnGroup</div>
+                        </div>
+                    </div>
+                    <div class="tab-pane container fade" id="modeDraw">Vẽ ô vuông</div>
+                    <div class="tab-pane container fade" id="fillColor">
+                        <div class="row mt-1">
+                            <select class="form-control" id="sel_color">
+                                <option value="" readonly>Chọn màu</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="col-md-6">
                 <canvas name="canvas" id="canvas" width="540" height="500"></canvas>
             </div>
-            <div class="col-md-3">
-                <div class="btn btn-info btn-block">Chức năng</div>
-            </div>
+
         </div>
     </div>
 
@@ -45,8 +82,191 @@
         (function() {
             const canvas = document.querySelector('#canvas');
             let listMode = {}
-            var fabricCanvas = new fabric.Canvas(canvas);
+            const fabricCanvas = new fabric.Canvas(canvas);
+            fabricCanvas.perPixelTargetFind = true;
+            fabricCanvas.targetFindTolerance = 5;
+            // fabricCanvas.hasControls = fabricCanvas.hasBorders = false;
 
+            function Point(x, y) {
+                this.x = x;
+                this.y = y;
+            };
+
+            const drawPolygon = {
+                roof: null,
+                roofPoints: [],
+                lines: [],
+                lineCounter: 0,
+                drawingObject: {
+                    type: '',
+                    background: '',
+                    border: '',
+                },
+
+                setStartingPoint: function(options) {
+                    this.x = options.e.pageX - fabricCanvas._offset.left;
+                    this.y = options.e.pageY - fabricCanvas._offset.top;
+                },
+                makeRoof: function() {
+                    var left = this.findLeftPaddingForRoof(this.roofPoints);
+                    var top = this.findTopPaddingForRoof(this.roofPoints);
+
+                    this.roofPoints.push(new Point(this.roofPoints[0].x, this.roofPoints[0].y))
+                    var roof = new fabric.Polyline(this.roofPoints, {
+                        fill: 'rgba(0,0,0,0.01)',
+                        stroke: '#58c'
+                    });
+                    roof.set({
+
+                        left: left,
+                        top: top,
+
+                    });
+
+
+                    return roof;
+                },
+
+                findTopPaddingForRoof: function() {
+                    var result = 999999;
+                    for (var f = 0; f < this.lineCounter; f++) {
+                        if (this.roofPoints[f].y < result) {
+                            result = this.roofPoints[f].y;
+                        }
+                    }
+                    return Math.abs(result);
+                },
+
+                findLeftPaddingForRoof: function() {
+                    var result = 999999;
+                    for (var i = 0; i < this.lineCounter; i++) {
+                        if (this.roofPoints[i].x < result) {
+                            result = this.roofPoints[i].x;
+                        }
+                    }
+                    return Math.abs(result);
+                },
+
+                onGroup: function() {
+                    if (!fabricCanvas.getActiveObject()) {
+                        return;
+                    }
+                    if (fabricCanvas.getActiveObject().type !== 'activeSelection') {
+                        return;
+                    }
+                    fabricCanvas.getActiveObject().toGroup().perPixelTargetFind = true;
+                    fabricCanvas.requestRenderAll();
+                },
+
+                onUnGroup: function() {
+                    if (!fabricCanvas.getActiveObject()) {
+                        return;
+                    }
+                    if (fabricCanvas.getActiveObject().type !== 'group') {
+                        return;
+                    }
+                    fabricCanvas.getActiveObject().toActiveSelection();
+                    fabricCanvas.requestRenderAll();
+                },
+
+                onDbclick: function(options) {
+                    if (this.drawingObject.type == 'roof') {
+                        this.drawingObject.type = '';
+                        this.lines.forEach(function(value, index, ar) {
+                            fabricCanvas.remove(value);
+                        });
+                        this.roof = this.makeRoof(this.roofPoints);
+                        fabricCanvas.add(this.roof);
+                        fabricCanvas.renderAll();
+
+                        //clear arrays
+                        this.roofPoints = [];
+                        this.lines = [];
+                        this.lineCounter = 0;
+                    } else {
+                        this.drawingObject.type = "roof";
+                        drawPolygon.onMouseDown(options)
+                    }
+
+                },
+                onMouseDown: function(options) {
+                    if (this.drawingObject.type == "roof") {
+                        fabricCanvas.selection = false;
+                        this.setStartingPoint(options); // set x,y
+                        this.roofPoints.push(new Point(this.x, this.y));
+                        var points = [this.x, this.y, this.x, this.y];
+                        this.lines.push(new fabric.Line(points, {
+                            strokeWidth: 3,
+                            selectable: false,
+                            stroke: 'red'
+                        }));
+                        fabricCanvas.add(this.lines[this.lineCounter]);
+                        this.lineCounter++;
+                    }
+                },
+                onMouseUp: function(options) {
+                    fabricCanvas.selection = true;
+                },
+                onMouseMove: function(options) {
+                    if (this.lines[0] !== null && this.lines[0] !== undefined && this.drawingObject.type == "roof") {
+                        this.setStartingPoint(options);
+                        this.lines[this.lineCounter - 1].set({
+                            x2: this.x,
+                            y2: this.y
+                        });
+                        fabricCanvas.renderAll();
+                    }
+                },
+
+                install: function() {
+                    if (this.drawingObject.type == 'roof') {
+                        this.drawingObject.type = "";
+                        this.lines.forEach(function(value, index, ar) {
+                            fabricCanvas.remove(value);
+                        });
+
+                        this.roof = this.makeRoof(this.roofPoints);
+                        fabricCanvas.add(this.roof);
+                        fabricCanvas.renderAll();
+                    } else {
+                        this.drawingObject.type = "roof";
+                    }
+
+                    this.mouseDown = function(e) {
+                        drawPolygon.onMouseDown(e)
+                    };
+
+                    this.mouseMove = function(e) {
+                        drawPolygon.onMouseMove(e)
+                    };
+
+                    this.mouseUp = function(e) {
+                        drawPolygon.onMouseUp(e)
+                    };
+
+                    this.dbclick = function(e) {
+                        drawPolygon.onDbclick(e)
+                    };
+
+                    fabricCanvas.on('mouse:down', this.mouseDown);
+                    fabricCanvas.on('mouse:move', this.mouseMove);
+                    fabricCanvas.on('mouse:up', this.mouseUp);
+                    fabricCanvas.on('mouse:dblclick', this.dbclick);
+
+                    $('.js-group').on('click', drawPolygon.onGroup);
+                    $('.js-ungroup').on('click', drawPolygon.onUnGroup);
+                },
+                uninstall: function() {
+                    this.drawingObject.type = "";
+                    fabricCanvas.off('mouse:down', this.mouseDown);
+                    fabricCanvas.off('mouse:move', this.mouseMove);
+                    fabricCanvas.off('mouse:up', this.mouseUp);
+                    fabricCanvas.off('mouse:dblclick', this.dbclick);
+                    $('.js-group').off('click', drawPolygon.onGroup);
+                    $('.js-ungroup').off('click', drawPolygon.onUnGroup);
+                }
+
+            }
 
             const modeDraw = {
                 dragging: false,
@@ -57,14 +277,13 @@
                 options: {
                     drawRect: true,
                     rectProps: {
-                        stroke: '',
+                        stroke: '#333',
                         strokeWidth: 1,
                         strokeDashArray: [10, 5],
                         fill: '',
                     }
                 },
                 onMouseDown: function(e) {
-                    console.log('a');
                     this.dragging = true;
                     if (!this.freeDrawing) {
                         return
@@ -143,13 +362,13 @@
                     this.dragging = false;
                     this.rect = null
                     this.checkDrawing = true;
-                    this.mouseDown = function (e) {
+                    this.mouseDown = function(e) {
                         modeDraw.onMouseDown(e)
                     }
-                    this.mouseMove = function (e) {
+                    this.mouseMove = function(e) {
                         modeDraw.onMouseMove(e)
                     }
-                    this.mouseUp = function (e) {
+                    this.mouseUp = function(e) {
                         modeDraw.onMouseUp(e)
                     }
                     fabricCanvas.on('mouse:down', this.mouseDown);
@@ -174,30 +393,42 @@
                 onMouseMove: function(e) {
                     let targetsHover = e.target
                     if (targetsHover) {
-                        targetsHover.set('hoverCursor', 'cell')
+                        targetsHover.set('hoverCursor', 'cell');
+                        targetsHover.drapable = false;
                     }
 
                 },
                 onMouseDown: function(e) {
                     let targetsHover = e.target
+
                     if (targetsHover) {
-                        targetsHover.set('fill', this.codeColor)
-                        targetsHover.set('opacity', this.opacity)
+                        if (targetsHover._objects) {
+                            targetsHover._objects.forEach(element => {
+                                element.set('fill', this.codeColor)
+                                element.set('opacity', this.opacity)
+                            });
+                        } else {
+                            targetsHover.set('fill', this.codeColor)
+                            targetsHover.set('opacity', this.opacity)
+                        }
+
                     }
+
+
                 },
                 onSelectColor: function(e) {
                     var valueColor = $(e.currentTarget).val();
-                    this.codeColor = valueColor || '';
+                    this.codeColor = valueColor || 'rgba(0,0,0,0.01)';
                 },
                 install: function() {
                     this.codeColor = '';
-                    this.mouseDown = function (e) {
+                    this.mouseDown = function(e) {
                         fillColor.onMouseDown(e)
                     }
-                    this.mouseMove = function (e) {
+                    this.mouseMove = function(e) {
                         fillColor.onMouseMove(e)
                     }
-                    this.selectColor = function (e) {
+                    this.selectColor = function(e) {
                         fillColor.onSelectColor(e)
                     }
                     fabricCanvas.on('mouse:move', this.mouseMove);
@@ -210,36 +441,35 @@
                     fabricCanvas.off('mouse:move', this.mouseMove);
                     fabricCanvas.off('mouse:down', this.mouseDown);
                     $('#sel_color').off('change', this.selectColor);
+                    fabricCanvas.getObjects().forEach((element) => {
+                        element.set('hoverCursor', 'move');
+                    })
                 }
             }
 
             listMode = {
                 modeDraw,
-                fillColor
+                fillColor,
+                drawPolygon
             }
 
+            var mode = false
 
-            var selectMode = $('#sel_mode');
-            var selectModeValue = selectMode.val();
-            var mode = listMode[selectModeValue];
-            mode && mode.install();
-
-            fabricCanvas.on('selection:created', function(event) {
-                var selected = event.selected;
-            })
-
-            selectMode.change(function() {
-                var valMode = $(this).val();
+            $('.js-select-mode').click(function() {
+                var valMode = $(this).data('mode');
 
                 mode && mode.uninstall();
                 mode = listMode[valMode];
                 mode && mode.install();
             })
 
+            // fabricCanvas.on('selection:created', function(event) {
+            //     var selected = event.selected;
+            // })
+
             window.addEventListener("keyup", function(event) {
                 if (event.keyCode === 27 || event.key === "Escape") {
-                    selectMode.val('');
-                    selectMode.change();
+                    $('.js-select-mode').first().click();
                 }
                 if (event.keyCode === 46 || event.key === "Delete") {
                     var activeObject = fabricCanvas.getActiveObject();
@@ -274,13 +504,36 @@
                 fabricCanvas.requestRenderAll();
             });
 
+
+
             fabricCanvas.on('mouse:over', function(e) {
-                e.target && e.target.set('stroke', 'red');
-                fabricCanvas.renderAll();
+                if (e.target) {
+                    var mousePos = fabricCanvas.getPointer(e.e);
+                    hoverTarget = fabricCanvas.findTarget(e, true);
+                    if (e.target._objects) {
+                        e.target._objects.forEach((ele) => {
+                            ele.set('stroke', '#ff0');
+
+                        })
+
+                    } else {
+                        e.target.set('stroke', '#ff0');
+                    }
+                    //fabricCanvas.setActiveObject(e.target)
+                    fabricCanvas.renderAll();
+                }
             })
 
             fabricCanvas.on('mouse:out', function(e) {
-                e.target && e.target.set('stroke', '');
+                if (e.target) {
+                    if (e.target._objects) {
+                        e.target._objects.forEach(element => {
+                            element.set('stroke', '#333');
+                        });
+                    } else {
+                        e.target.set('stroke', '#333');
+                    }
+                }
                 fabricCanvas.renderAll();
             })
 
@@ -301,6 +554,28 @@
                     optItem.text(item.ten);
                     selectColor.append(optItem);
                 }
+            })
+
+            $('.js-export-data').click(function() {
+                $('.json-export-contain').text(JSON.stringify(fabricCanvas.toJSON()))
+            })
+
+            $('.js-import-data').click(function() {
+                $.ajax({
+                    url: 'ajax/ajax.php',
+                    method: "GET",
+                    dataType: 'json',
+                    data: {
+                        act: 'data'
+                    },
+                }).done(function(result) {
+                    fabricCanvas.loadFromJSON(result, fabricCanvas.renderAll.bind(fabricCanvas), function(o, object) {
+                        // `o` = json object
+                        // `object` = fabric.Object instance
+                        // ... do some stuff ...
+                    });
+                })
+
             })
 
         }())
