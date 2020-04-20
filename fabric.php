@@ -421,7 +421,7 @@
                     this.codeColor = valueColor || 'rgba(0,0,0,0.01)';
                 },
                 install: function() {
-                    this.codeColor = '';
+                    this.codeColor = 'rgba(0,0,0,0.01)';
                     this.mouseDown = function(e) {
                         fillColor.onMouseDown(e)
                     }
@@ -437,7 +437,7 @@
 
                 },
                 uninstall: function() {
-                    this.codeColor = '';
+                    this.codeColor = 'rgba(0,0,0,0.01)';
                     fabricCanvas.off('mouse:move', this.mouseMove);
                     fabricCanvas.off('mouse:down', this.mouseDown);
                     $('#sel_color').off('change', this.selectColor);
