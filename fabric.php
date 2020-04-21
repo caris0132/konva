@@ -104,8 +104,10 @@
                 },
 
                 setStartingPoint: function(options) {
-                    this.x = options.e.pageX - fabricCanvas._offset.left;
-                    this.y = options.e.pageY - fabricCanvas._offset.top;
+                    // this.x = Math.round(options.e.x - fabricCanvas._offset.left);
+                    // this.y = Math.round(options.e.y - fabricCanvas._offset.top);
+                    this.x = options.absolutePointer.x;
+                    this.y = options.absolutePointer.y;
                 },
                 makeRoof: function() {
                     var left = this.findLeftPaddingForRoof(this.roofPoints);
@@ -196,7 +198,7 @@
                         this.roofPoints.push(new Point(this.x, this.y));
                         var points = [this.x, this.y, this.x, this.y];
                         this.lines.push(new fabric.Line(points, {
-                            strokeWidth: 3,
+                            strokeWidth: 1,
                             selectable: false,
                             stroke: 'red'
                         }));
@@ -289,7 +291,7 @@
                         return
                     }
                     this.initialPos = {
-                        ...e.pointer
+                        ...e.absolutePointer
                     }
                     this.bounds = {}
                     if (this.options.drawRect) {
@@ -331,7 +333,7 @@
                     if (!this.dragging || !this.freeDrawing) {
                         return
                     }
-                    requestAnimationFrame(() => this.update(e.pointer))
+                    requestAnimationFrame(() => this.update(e.absolutePointer))
                 },
                 onMouseUp: function(e) {
                     this.dragging = false;
@@ -536,6 +538,64 @@
                 }
                 fabricCanvas.renderAll();
             })
+
+            // Zoom in/Out
+
+
+            fabricCanvas.on('mouse:wheel', function(opt) {
+                var delta = opt.e.deltaY;
+                var zoom = fabricCanvas.getZoom();
+                zoom = zoom + delta / 2000;
+                if (zoom > 10) zoom = 10;
+                if (zoom < 0.1) zoom = 0.1;
+                fabricCanvas.zoomToPoint({
+                    x: opt.e.offsetX,
+                    y: opt.e.offsetY
+                }, zoom);
+                opt.e.preventDefault();
+                opt.e.stopPropagation();
+                var vpt = this.viewportTransform;
+                if (zoom < 400 / 1000) {
+                    this.viewportTransform[4] = 200 - 1000 * zoom / 2;
+                    this.viewportTransform[5] = 200 - 1000 * zoom / 2;
+                } else {
+                    if (vpt[4] >= 0) {
+                        this.viewportTransform[4] = 0;
+                    } else if (vpt[4] < fabricCanvas.getWidth() - 1000 * zoom) {
+                        this.viewportTransform[4] = fabricCanvas.getWidth() - 1000 * zoom;
+                    }
+                    if (vpt[5] >= 0) {
+                        this.viewportTransform[5] = 0;
+                    } else if (vpt[5] < fabricCanvas.getHeight() - 1000 * zoom) {
+                        this.viewportTransform[5] = fabricCanvas.getHeight() - 1000 * zoom;
+                    }
+                }
+
+            })
+
+            fabricCanvas.on('mouse:down', function(opt) {
+                var evt = opt.e;
+                if (evt.altKey === true) {
+                    this.isDragging = true;
+                    this.selection = false;
+                    this.lastPosX = evt.clientX;
+                    this.lastPosY = evt.clientY;
+                }
+            });
+            fabricCanvas.on('mouse:move', function(opt) {
+                if (this.isDragging) {
+                    var e = opt.e;
+                    this.viewportTransform[4] += e.clientX - this.lastPosX;
+                    this.viewportTransform[5] += e.clientY - this.lastPosY;
+                    this.requestRenderAll();
+                    this.lastPosX = e.clientX;
+                    this.lastPosY = e.clientY;
+                }
+            });
+            fabricCanvas.on('mouse:up', function(opt) {
+                this.isDragging = false;
+                this.selection = true;
+            });
 
 
             var selectColor = $('#sel_color');
